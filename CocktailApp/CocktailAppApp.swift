@@ -11,7 +11,7 @@ import SwiftUI
 struct CocktailAppApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            CocktailListView()
         }
     }
 }
