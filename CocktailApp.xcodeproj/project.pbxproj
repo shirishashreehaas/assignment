@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D79198042D21CD7F00B4EE0A /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D79198032D21CD7F00B4EE0A /* ImageLoader.swift */; };
+		D79198062D21CDA300B4EE0A /* AsyncImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D79198052D21CDA300B4EE0A /* AsyncImageView.swift */; };
+		D79198082D21CF4A00B4EE0A /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D79198072D21CF4A00B4EE0A /* ImageCache.swift */; };
 		D7B358CA2D1D3F730076D6C0 /* CocktailAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B358C92D1D3F730076D6C0 /* CocktailAppApp.swift */; };
 		D7B358CC2D1D3F730076D6C0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B358CB2D1D3F730076D6C0 /* ContentView.swift */; };
 		D7B358CE2D1D3F870076D6C0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D7B358CD2D1D3F870076D6C0 /* Assets.xcassets */; };
@@ -43,6 +46,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D79198032D21CD7F00B4EE0A /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
+		D79198052D21CDA300B4EE0A /* AsyncImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncImageView.swift; sourceTree = "<group>"; };
+		D79198072D21CF4A00B4EE0A /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		D7B358C62D1D3F730076D6C0 /* CocktailApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CocktailApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7B358C92D1D3F730076D6C0 /* CocktailAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CocktailAppApp.swift; sourceTree = "<group>"; };
 		D7B358CB2D1D3F730076D6C0 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -90,6 +96,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D79198022D21CD6300B4EE0A /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				D79198032D21CD7F00B4EE0A /* ImageLoader.swift */,
+				D79198072D21CF4A00B4EE0A /* ImageCache.swift */,
+			);
+			path = Utility;
+			sourceTree = "<group>";
+		};
 		D7B358BD2D1D3F730076D6C0 = {
 			isa = PBXGroup;
 			children = (
@@ -113,6 +128,7 @@
 		D7B358C82D1D3F730076D6C0 /* CocktailApp */ = {
 			isa = PBXGroup;
 			children = (
+				D79198022D21CD6300B4EE0A /* Utility */,
 				D7B358F72D1D41120076D6C0 /* Models */,
 				D7B358F62D1D40FD0076D6C0 /* ViewModels */,
 				D7B358F52D1D40D10076D6C0 /* Views */,
@@ -167,6 +183,7 @@
 			children = (
 				D7B359002D1D42350076D6C0 /* CocktailListView.swift */,
 				D7B359022D1D42450076D6C0 /* CocktailDetailView.swift */,
+				D79198052D21CDA300B4EE0A /* AsyncImageView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -319,15 +336,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				D7B359012D1D42350076D6C0 /* CocktailListView.swift in Sources */,
+				D79198082D21CF4A00B4EE0A /* ImageCache.swift in Sources */,
 				D7B358FD2D1D41A60076D6C0 /* CocktailAPIService.swift in Sources */,
 				D7B358FB2D1D41710076D6C0 /* CocktailDetails.swift in Sources */,
 				D7B359032D1D42450076D6C0 /* CocktailDetailView.swift in Sources */,
 				D7F900C02D1E98E200064214 /* MockCocktailAPIService.swift in Sources */,
+				D79198042D21CD7F00B4EE0A /* ImageLoader.swift in Sources */,
 				D7B358FF2D1D41CF0076D6C0 /* CocktailViewModel.swift in Sources */,
 				D7B358CC2D1D3F730076D6C0 /* ContentView.swift in Sources */,
 				D7B358CA2D1D3F730076D6C0 /* CocktailAppApp.swift in Sources */,
 				D7F900BE2D1E968400064214 /* CocktailAPIServiceProtocol.swift in Sources */,
 				D7B358F92D1D41530076D6C0 /* CocktailItem.swift in Sources */,
+				D79198062D21CDA300B4EE0A /* AsyncImageView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

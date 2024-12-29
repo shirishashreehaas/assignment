@@ -21,16 +21,21 @@ struct CocktailDetailView: View {
                     .font(.largeTitle)
                     .bold()
               
-                AsyncImage(url: URL(string: details.strDrinkThumb)) { image in
-                    image.resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(maxWidth: .infinity, maxHeight: 250)
-                        .clipShape(RoundedRectangle(cornerRadius: 20))
-                } placeholder: {
-                    ProgressView()
-                }
-                .clipShape(Circle())
+//                AsyncImage(url: URL(string: details.strDrinkThumb)) { image in
+//                    image.resizable()
+//                        .aspectRatio(contentMode: .fit)
+//                        .frame(maxWidth: .infinity, maxHeight: 250)
+//                        .clipShape(RoundedRectangle(cornerRadius: 20))
                 
+//                } placeholder: {
+//                    ProgressView()
+//                }
+//                .clipShape(Circle())
+                AsyncImageView(imageURL: cocktail.strDrinkThumb)
+                              .frame(height: 300)
+                              .clipped()
+                              .cornerRadius(12)
+                              .padding(.bottom, 16)
                 
                 Text("Description")
                     .font(.headline)

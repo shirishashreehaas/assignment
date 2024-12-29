@@ -30,6 +30,10 @@ class MockCocktailAPIService: CocktailAPIServiceProtocol {
 
 
     func fetchCocktails(filter: String) -> AnyPublisher<[CocktailItem], Error> {
+        let mockCocktails = [
+                   CocktailItem(idDrink: "1", strDrink: "Mock Margarita", strDrinkThumb: "", isFavorite: false),
+                   CocktailItem(idDrink: "2", strDrink: "Mock Mojito", strDrinkThumb: "", isFavorite: false)
+               ]
         if shouldFail {
             return Fail(error: URLError(.badServerResponse))
                 .eraseToAnyPublisher()
