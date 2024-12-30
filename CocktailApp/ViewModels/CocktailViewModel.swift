@@ -9,11 +9,12 @@ import Combine
 import Foundation
 
 class CocktailViewModel: ObservableObject {
-   // @Published var categories: [CocktailCategory] = []
     @Published var cocktails: [CocktailItem] = []
     @Published var cocktailDetails: CocktailDetails?
     @Published var errorMessage: String?
     @Published var favoriteCocktailIDs: Set<String> = []
+    @Published var isLoading: Bool = false
+
     var favoritesKey = "favoriteCocktailIDs" // Key for UserDefaults
 
     private let apiService: CocktailAPIServiceProtocol
@@ -21,26 +22,31 @@ class CocktailViewModel: ObservableObject {
     
     init(service: CocktailAPIServiceProtocol) {
         self.apiService = service;
+        loadFavorites()
+
     }
-    
-//    func loadCategories() {
-//        apiService.fetchCategories()
-//            .sink(receiveCompletion: { completion in
-//                if case .failure(let error) = completion {
-//                    self.errorMessage = error.localizedDescription
-//                }
-//            }, receiveValue: { [weak self] categories in
-//                self?.categories = categories
-//            })
-//            .store(in: &cancellables)
-//    }
+
     
     func loadCocktails(filter: String) {
+        isLoading = true
+              errorMessage = nil
+
         apiService.fetchCocktails(filter: filter)
             .sink(receiveCompletion: { completion in
-                if case .failure(let error) = completion {
-                    self.errorMessage = error.localizedDescription
-                }
+                self.isLoading = false
+
+                switch completion {
+                            case .failure(let error):
+                    self.cocktails = []
+                                if let apiError = error as? APIError {
+                                    self.errorMessage = apiError.errorDescription // Use APIError's description
+                                } else {
+                                    self.errorMessage = "An unexpected error occurred. Please try again."
+                                }
+                            case .finished:
+                                break
+                            }
+
             }, receiveValue: { [weak self] fetchedCocktails in
                 guard let self = self else { return }
                 self.cocktails = fetchedCocktails.map { cocktail in
@@ -52,17 +58,30 @@ class CocktailViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func loadCocktailDetails(id: String) {
-        apiService.fetchCocktailDetails(id: id)
-            .sink(receiveCompletion: { completion in
-                if case .failure(let error) = completion {
-                    self.errorMessage = error.localizedDescription
-                }
-            }, receiveValue: { [weak self] details in
-                self?.cocktailDetails = details
-            })
-            .store(in: &cancellables)
-    }
+//    func loadCocktailDetails(id: String) {
+//        isLoading = true
+//              errorMessage = nil
+//       // self.cocktailDetails = nil
+//
+//        apiService.fetchCocktailDetails(id: id)
+//            .sink(receiveCompletion: { completion in
+//                self.isLoading = false
+//
+//                switch completion {
+//                            case .failure(let error):
+//                                if let apiError = error as? APIError {
+//                                    self.errorMessage = apiError.errorDescription // Use APIError's description
+//                                } else {
+//                                    self.errorMessage = "An unexpected error occurred. Please try again."
+//                                }
+//                            case .finished:
+//                                break
+//                            }
+//            }, receiveValue: { [weak self] details in
+//                self?.cocktailDetails = details
+//            })
+//            .store(in: &cancellables)
+//    }
     
     func toggleFavorite(for cocktailItem: CocktailItem) {
         if favoriteCocktailIDs.contains(cocktailItem.id) {
@@ -84,6 +103,12 @@ class CocktailViewModel: ObservableObject {
         print("Loaded Favorites: \(favoriteCocktailIDs)")
 
     }
+    func isFavorite(cocktailID: String) -> Bool {
+            guard let index = cocktails.firstIndex(where: { $0.idDrink == cocktailID }) else {
+                return false
+            }
+            return cocktails[index].isFavorite
+        }
     
     private func updateFavoriteStatus() {
         cocktails = cocktails.map { cocktail in
@@ -93,17 +118,5 @@ class CocktailViewModel: ObservableObject {
         }
     }
     
-//    func filteredCocktails() -> [CocktailItem] {
-//        let filtered = filterState == .all ? cocktails :
-//            cocktails.filter { $0.isAlcoholic == (filterState == .alcoholic) }
-//
-//        // Favorite cocktails pinned at the top
-//        var vv = filtered.sorted {
-//            if $0.isFavorite != $1.isFavorite {
-//                return $0.isFavorite
-//            }
-//            return $0.name < $1.name
-//        }
-//        return vv
-//    }
+
 }

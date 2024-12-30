@@ -12,10 +12,8 @@ struct CocktailItem: Identifiable, Codable {
     
     var id: String { idDrink }
     
-    // Default value ensures no decoding errors
     var isFavorite: Bool = false
 
-    // CodingKeys to map JSON keys explicitly
     enum CodingKeys: String, CodingKey {
         case idDrink
         case strDrink

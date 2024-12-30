@@ -30,6 +30,14 @@ class CocktailAPIService :  CocktailAPIServiceProtocol {
             .decode(type: [String: [CocktailItem]].self, decoder: JSONDecoder())
             .map { $0["drinks"] ?? [] }
             .receive(on: DispatchQueue.main)
+            .mapError { error in
+                            if let urlError = error as? URLError {
+                                return APIError.networkError
+                            } else if let decodingError = error as? DecodingError {
+                                return APIError.decodingError
+                            }
+                            return APIError.unknownError
+                        }
             .eraseToAnyPublisher()
     }
     
@@ -40,6 +48,14 @@ class CocktailAPIService :  CocktailAPIServiceProtocol {
             .decode(type: [String: [CocktailDetails]].self, decoder: JSONDecoder())
             .compactMap { $0["drinks"]?.first }
             .receive(on: DispatchQueue.main)
+            .mapError { error in
+                            if let urlError = error as? URLError {
+                                return APIError.networkError
+                            } else if let decodingError = error as? DecodingError {
+                                return APIError.decodingError
+                            }
+                            return APIError.unknownError
+                        }
             .eraseToAnyPublisher()
     }
 }

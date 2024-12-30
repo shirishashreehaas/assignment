@@ -12,11 +12,12 @@ class MockCocktailAPIService: CocktailAPIServiceProtocol {
     var mockCocktails: [CocktailItem] = []
       var mockCocktailDetails: CocktailDetails?
       var shouldFail = false
-    
+    var errorToThrow: APIError = .unknownError
+
     func fetchCocktailDetails(id: String) -> AnyPublisher<CocktailDetails, Error> {
-           if shouldFail {
-               return Fail(error: URLError(.badServerResponse))
-                   .eraseToAnyPublisher()
+        if shouldFail || mockCocktailDetails == nil {
+               return Fail(error: errorToThrow)
+                               .eraseToAnyPublisher()
            } else if let details = mockCocktailDetails {
                return Just(details)
                    .setFailureType(to: Error.self)
@@ -35,8 +36,8 @@ class MockCocktailAPIService: CocktailAPIServiceProtocol {
                    CocktailItem(idDrink: "2", strDrink: "Mock Mojito", strDrinkThumb: "", isFavorite: false)
                ]
         if shouldFail {
-            return Fail(error: URLError(.badServerResponse))
-                .eraseToAnyPublisher()
+            return Fail(error: errorToThrow)
+                            .eraseToAnyPublisher()
         } else {
             return Just(mockCocktails)
                 .setFailureType(to: Error.self)

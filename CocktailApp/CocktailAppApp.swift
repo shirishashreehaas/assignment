@@ -13,7 +13,7 @@ struct CocktailApp: App {
         let apiService: CocktailAPIServiceProtocol = isTesting ? MockCocktailAPIService() : CocktailAPIService()
 
         WindowGroup {
-            CocktailListView(viewModel: CocktailViewModel(service: apiService))
+            CocktailListView()
         }
     }
 }

@@ -34,18 +34,14 @@ class CocktailViewModelTests: XCTestCase {
     }
 
     func testLoadCocktailsSuccess() {
-        mockService.mockCocktails = [
-            CocktailItem(idDrink: "1", strDrink: "Margarita", strDrinkThumb: "https://example.com/margarita.jpg"),
-            CocktailItem(idDrink: "2", strDrink: "Mojito", strDrinkThumb: "https://example.com/mojito.jpg")
-        ]
 
         let expectation = XCTestExpectation(description: "Fetch cocktails successfully")
         viewModel.$cocktails
             .dropFirst()
             .sink { cocktails in
                 XCTAssertEqual(cocktails.count, 2)
-                XCTAssertEqual(cocktails[0].strDrink, "Margarita")
-                XCTAssertEqual(cocktails[1].strDrink, "Mojito")
+                XCTAssertEqual(cocktails[0].strDrink, "Mock Margarita")
+                XCTAssertEqual(cocktails[1].strDrink, "Mock Mojito")
                 expectation.fulfill()
             }
             .store(in: &cancellables)
@@ -57,19 +53,21 @@ class CocktailViewModelTests: XCTestCase {
 
     func testLoadCocktailsFailure() {
         mockService.shouldFail = true
+        mockService.errorToThrow = APIError.invalidResponse
 
-        let expectation = XCTestExpectation(description: "Fetch cocktails fails")
-        viewModel.$errorMessage
-            .dropFirst()
-            .sink { errorMessage in
-                XCTAssertNotNil(errorMessage)
-                expectation.fulfill()
-            }
-            .store(in: &cancellables)
-
+        // Act: Trigger fetching details
         viewModel.loadCocktails(filter: "Alcoholic")
-        
-        wait(for: [expectation], timeout: 2.0)
+
+        // Assert: Ensure error message is set
+        let expectation = XCTestExpectation(description: "Error message should be set")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            XCTAssertTrue(self.viewModel.cocktails.isEmpty, "Cocktail list should be empty when an error occurs.")
+            XCTAssertFalse(self.viewModel.isLoading, "Loading state should be false after API call.")
+            XCTAssertEqual(self.viewModel.errorMessage, "Invalid response from server.", "Error message should match APIError description.")
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 1.0)
     }
     
     func testToggleFavorite() {
@@ -86,53 +84,5 @@ class CocktailViewModelTests: XCTestCase {
             viewModel.loadFavorites()
             XCTAssertTrue(viewModel.favoriteCocktailIDs.contains(cocktailIem.id))
        }
-    func testLoadCocktailDetailsSuccess() {
-        // Given
-        let mockDetails = CocktailDetails(
-            idDrink: "1",
-            strDrink: "Margarita",
-            strInstructions: "Mix ingredients and serve over ice.",
-            strIngredient1: "Tequila",
-            strIngredient2: "Triple sec",
-            strIngredient3: "Lime juice",
-            strDrinkThumb: "https://example.com/margarita.jpg"
-        )
-      
-        mockService.mockCocktailDetails = mockDetails
 
-        // When
-        let expectation = XCTestExpectation(description: "Fetch cocktail details successfully")
-        viewModel.$cocktailDetails
-            .dropFirst() // Ignore the initial nil value
-            .sink(receiveValue: { details in
-                XCTAssertEqual(details?.strDrink, "Margarita")
-                expectation.fulfill()
-            })
-            .store(in: &cancellables)
-
-        viewModel.loadCocktailDetails(id: "1")
-
-        // Then
-        wait(for: [expectation], timeout: 1.0)
-    }
-
-    func testLoadCocktailDetailsFailure() {
-        // Given
-        mockService.shouldFail = true
-
-        // When
-        let expectation = XCTestExpectation(description: "Fetch cocktail details fails")
-        viewModel.$errorMessage
-            .dropFirst() // Ignore the initial nil value
-            .sink(receiveValue: { errorMessage in
-                XCTAssertNotNil(errorMessage)
-                expectation.fulfill()
-            })
-            .store(in: &cancellables)
-
-        viewModel.loadCocktailDetails(id: "1")
-
-        // Then
-        wait(for: [expectation], timeout: 1.0)
-    }
 }
