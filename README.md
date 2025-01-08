@@ -45,7 +45,5 @@ API Endpoints
 List Cocktails: /filter.php?c={filter}
 Cocktail Details: /lookup.php?i={id}
 
-Screenshots:
-![App Screenshot](screenshot1.png)
 
 
