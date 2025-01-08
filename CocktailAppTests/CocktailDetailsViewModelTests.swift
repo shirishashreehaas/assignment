@@ -32,7 +32,7 @@ class CocktailDetailsViewModelTests: XCTestCase {
 
    
     
-
+    /// Tests that cocktail details are successfully loaded from the API and update the view model.
     func testLoadCocktailDetailsSuccess() {
         let mockDetails = CocktailDetails(
             idDrink: "1",
@@ -45,8 +45,11 @@ class CocktailDetailsViewModelTests: XCTestCase {
         )
 
         mockService.mockCocktailDetails = mockDetails
-
+        
+        // Expectation to wait for the test to complete
         let expectation = XCTestExpectation(description: "Fetch cocktail details successfully")
+        
+        // Subscribe to the `cocktailDetails` publisher in the view model
         viewModel.$cocktailDetails
             .dropFirst() // Ignore the initial nil value
             .sink(receiveValue: { details in
@@ -54,14 +57,18 @@ class CocktailDetailsViewModelTests: XCTestCase {
                 expectation.fulfill()
             })
             .store(in: &cancellables)
-
+        
+        // Act: Trigger fetching details
         viewModel.loadCocktailDetails(id: "1")
-
+        
+        // Wait for expectations to be fulfilled
         wait(for: [expectation], timeout: 1.0)
     }
 
+    /// Tests that the view model handles API failures correctly and displays an error message.
     func testLoadCocktailDetailsFailure() {
         
+        // Arrange: Configure the mock service to simulate a failure
         mockService.shouldFail = true
         mockService.errorToThrow = APIError.invalidResponse
 
@@ -76,7 +83,8 @@ class CocktailDetailsViewModelTests: XCTestCase {
             XCTAssertEqual(self.viewModel.errorMessage, "Invalid response from server.", "Error message should match APIError description.")
             expectation.fulfill()
         }
-
+        
+        // Wait for expectations to be fulfilled
         wait(for: [expectation], timeout: 1.0)
     }
    

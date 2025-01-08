@@ -14,6 +14,7 @@ struct CocktailListView: View {
 
     var body: some View {
         NavigationView {
+            // Display loader, error and retry option
             VStack {
                 if viewModel.isLoading {
                     ProgressView("Loading Cocktails...")
@@ -37,7 +38,9 @@ struct CocktailListView: View {
                         }
                     }
                     .padding()
+                    // Display the picker and the list of cocktails if data is successfully loaded
                 } else {
+                    // Filter picker for selecting "Alcoholic" or "Non-Alcoholic"
                 Picker("Filter", selection: $selectedFilter) {
                     Text("Alcoholic").tag("Alcoholic")
                     Text("Non-Alcoholic").tag("Non_Alcoholic")
@@ -47,6 +50,7 @@ struct CocktailListView: View {
 
                 List(viewModel.cocktails) { cocktail in
                     NavigationLink(destination: CocktailDetailView(cocktailListViewModel: viewModel, cocktailDetailViewModel: CocktailDetailsViewModel(apiService: CocktailAPIService()), cocktail: cocktail))  {
+                        // Display cocktails list
                         HStack {
 
                             AsyncImageView(imageURL: cocktail.strDrinkThumb)
@@ -70,7 +74,7 @@ struct CocktailListView: View {
                         }
                     }
                 }
-
+                    // Trigger load cocktails when the filter changes
                 .onChange(of: selectedFilter) { filter in
                     viewModel.loadCocktails(filter: filter)
                 }

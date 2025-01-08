@@ -15,14 +15,17 @@ class CocktailDetailsViewModel: ObservableObject {
     private let apiService: CocktailAPIServiceProtocol
     private var cancellables = Set<AnyCancellable>()
 
+    /// Initializes the ViewModel with an API service
+    /// - Parameter apiService: The service responsible for fetching cocktail data
     init(apiService: CocktailAPIServiceProtocol) {
         self.apiService = apiService
     }
-
+    
+    /// Fetches cocktail details from the API
+    /// - Parameter id: The id of cocktail to get details
     func loadCocktailDetails(id: String) {
         isLoading = true
               errorMessage = nil
-       // self.cocktailDetails = nil
 
         apiService.fetchCocktailDetails(id: id)
             .sink(receiveCompletion: { completion in
